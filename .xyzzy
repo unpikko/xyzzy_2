@@ -1,0 +1,94 @@
+(load-library "gates")
+
+;;◆テキストモード時の色設定
+;;http://www.geocities.co.jp/Technopolis-Mars/8229/xyzzy/xyzzy-color.html
+(add-hook '*text-mode-hook*
+		  (function (lambda () (setq abbrev-mode t)
+					  (setq highlight-keyword t)
+					  (text-parenthses-colorize))))
+
+(defvar *text-paretheses-colorize* nil)
+(setq *text-paretheses-colorize* (make-hash-table))
+(setf (gethash #\「 *text-paretheses-colorize*) #\」)
+(setf (gethash #\『 *text-paretheses-colorize*) #\』)
+(setf (gethash #\〈 *text-paretheses-colorize*) #\〉)
+(setf (gethash #\【 *text-paretheses-colorize*) #\】)
+(setf (gethash #\≪ *text-paretheses-colorize*) #\≫)
+(setf (gethash #\〔 *text-paretheses-colorize*) #\〕)
+(setf (gethash #\［ *text-paretheses-colorize*) #\］)
+(setf (gethash #\｛ *text-paretheses-colorize*) #\｝)
+(setf (gethash #\《 *text-paretheses-colorize*) #\》)
+(setf (gethash #\＜ *text-paretheses-colorize*) #\＞)
+(setf (gethash #\[ *text-paretheses-colorize*) #\])
+
+(defun text-parenthses-colorize ()
+  (interactive)
+  (setq parentheses-hash-table *text-paretheses-colorize*)
+  (setq highlight-keyword t))
+
+
+;;テキストの色を変更する
+(defvar *text-mode-formats*
+  (compile-regexp-keyword-list
+   '(
+	 ;見出し
+	 ("^[□■◇◆○●\.\-].*" t (:color 1 0 :bold))
+	 ("^[@].*" t 6)
+	 ("[★☆]" t (:color 3 8 :bold))
+	 ("^[▲].*" t (:color 3 8 :bold))
+	 ("^http.*" t (:color 3 8 :bold))
+	 ("^[=＝ー].*" t (:color 3 8 :bold))
+	 ("\#[0-9]*" t (:color 14 0 :bold))
+;;	 ("\'.+\'" t (:color 13 0 :bold))
+	 ("[\'][^\'\n]+[\']" t (:color 13 0 :bold))
+;;	 ("[\"].+[\"]" t (:color 13 0 :bold))
+	 ("[\"][^\"\n]+[\"]" t (:color 13 0 :bold))
+	 ("※.*" t (:color 5 8 :bold))
+	 ("^>.*$" t (:color 2 8 :bold))
+	 ("^\$.*$" t (:color 2 8 :bold))
+	 ("^[0-9a-zA-Z]+.[0-9a-zA-Z \-]+$" t (:color 2 8 :bold))	 	          ("^[0-9a-zA-Z]+.*^。$" t (:color 2 8 :bold))
+	 ("^[ \t]*J[\.].+[ \t\n]" t (:color 9 0 :bold))
+	 ("^[ \t]*S[\.].+[ \t\n]" t (:color 14 0 :bold))
+;	 ("^[0-9]\{7\}[ \t]J[\.].+[ \t\n]" t (:color 9 0 :bold))
+;	 ("^[0-9]\{7\}[ \t]S[\.].+[ \t\n]" t (:color 14 0 :bold))
+	 ("(?<=[0-9]\t)J[\.].+[ \t\n]" t (:color 9 0 :bold))
+;	 ("^[0-9]\{7\}[ \t]S[\.].+[ \t$])" t (:color 14 0 :bold))
+	 ("\tJ\..+(\-|ｶ|ﾘ| )\/.+[ \t$]" t (:color 13 0 :bold))
+	 ("図[0-9]+" t (:color 8 3 :bold))
+	 ("リスト[0-9]+"  t (:color 8 3 :bold))
+	 ("写真[0-9]+" t (:color 8 3 :bold))
+	 ("表[0-9]+" t (:color 8 3 :bold))
+	 ("注[0-9]+" t (:color 8 3 :bold))
+	 ("([0-9]|,)\{2,\}" t (:color 5 7))
+	 )
+   )
+  ) ;
+
+;
+(setq regexp-keyword-list *text-mode-formats*)   
+(add-hook 'text-mode-hook 'my-color-text-mode)
+
+(defun my-color-text-mode ()
+  (make-local-variable 'regexp-keyword-list)       
+  (setq regexp-keyword-list *text-mode-formats*)   
+  )
+
+
+;;テキストの色を変更する
+(add-hook '*lisp-mode-hook*
+		  (function (lambda () (setq abbrev-mode t)
+					  (setq highlight-keyword t)
+					  )))
+(defvar *lisp-mode-formats*
+  (compile-regexp-keyword-list
+   '(
+	 ("^;;;" t (:color 9 0 :bold))
+	 )
+   )
+  ) ;
+(add-hook 'lisp-mode-hook 'my-color-lisp-mode)
+(defun my-color-lisp-mode ()
+  (make-local-variable 'regexp-keyword-list)       
+  (setq regexp-keyword-list *lisp-mode-formats*)   
+  )
+
