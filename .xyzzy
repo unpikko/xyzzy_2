@@ -1,8 +1,5 @@
 ;;;;Emacs like keybind
 (global-set-key '(#\C-x #\h) 'selection-whole-buffer)
-(global-set-key '(#\C-p) 'previous-virtual-line)
-(global-set-key '(#\C-p) 'previous-virtual-line)
-
 (global-set-key '(#\M-]) 'forward-paragraph)
 (global-set-key '(#\M-[) 'backward-paragraph)
 
